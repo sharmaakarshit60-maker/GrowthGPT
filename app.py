@@ -26,7 +26,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "growthgpt-secret-key-change-in-pr
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024   # 5 MB upload limit
 
 BASE_DIR         = os.path.dirname(os.path.abspath(__file__))
-DB_PATH          = os.path.join(BASE_DIR, "growthgpt.db")
+DB_PATH = "/tmp/growthgpt.db"
 ALLOWED_EXTENSIONS = {"txt", "pdf"}
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "OPENAI_API_KEY"))
@@ -496,7 +496,7 @@ def too_large(_):
 # ══════════════════════════════════════════
 #  ENTRY POINT
 # ══════════════════════════════════════════
-
+init_db() 
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
