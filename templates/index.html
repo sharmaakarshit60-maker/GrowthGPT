@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>GrowthGPT</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     LAYOUT SHELL — sidebar + main side by side
+════════════════════════════════════════════ -->
+<div class="shell">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <div class="sb-top">
+      <div class="brand-row">
+        <div class="brand-icon">🌱</div>
+        <span class="brand-name">GrowthGPT</span>
+      </div>
+
+      <!-- New Chat button -->
+      <button class="new-btn" onclick="startNewChat()">✨ New Chat</button>
+
+      <!-- Search bar -->
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Search chats…"
+          oninput="filterChats(this.value)"
+        />
+      </div>
+    </div>
+
+    <!-- Chat list (sections: Today / Yesterday / Previous) -->
+    <div class="chat-list" id="chat-list">
+      <div class="empty-chats">No chats yet. Start a new conversation!</div>
+    </div>
+
+    <!-- User footer -->
+    <div class="sb-foot">
+      <div class="user-row">
+        <div class="user-av">{{ username[0]|upper }}</div>
+        <div class="user-info">
+          <div class="user-name">{{ username }}</div>
+          <div class="user-plan">Free Plan</div>
+        </div>
+        <a href="/logout" class="logout-btn" title="Sign out">⎋</a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="header">
+      <!-- Mobile sidebar toggle -->
+      <button class="sb-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+      <!-- Left: page title -->
+      <span class="hdr-title" id="hdr-title">New Chat</span>
+
+      <!-- Right: icon group + badge -->
+      <div class="hdr-actions">
+        <button class="hdr-icon-btn" title="Search">🔍</button>
+        <button class="hdr-icon-btn" title="Settings">⚙️</button>
+        <div class="hdr-avatar" title="Profile">
+          <span id="hdr-av-letter">A</span>
+        </div>
+        <div class="status-badge"><span class="status-dot"></span>Growth Engine Active 🚀</div>
+      </div>
+    </header>
+
+    <!-- Messages area -->
+    <div class="messages" id="messages">
+
+      <!-- Welcome screen — shown before first message -->
+      <div class="welcome" id="welcome">
+        <div class="wlc-icon">🚀</div>
+        <h2>Hi, I'm GrowthGPT</h2>
+        <p>Your AI-powered growth partner. Ask anything or upload a file for insights.</p>
+        <div class="prompt-grid">
+          <div class="pc" onclick="usePrompt('How do I build a growth strategy for my startup?')">
+            <span>📈</span><strong>Growth Strategy</strong><small>Build a roadmap that scales</small>
+          </div>
+          <div class="pc" onclick="usePrompt('What are the best marketing channels for early-stage startups?')">
+            <span>📣</span><strong>Marketing Channels</strong><small>Find your audience</small>
+          </div>
+          <div class="pc" onclick="usePrompt('How do I improve user retention?')">
+            <span>🎯</span><strong>Retention Tips</strong><small>Keep users coming back</small>
+          </div>
+          <div class="pc" onclick="usePrompt('Give me fundraising advice for my startup.')">
+            <span>💰</span><strong>Fundraising</strong><small>Pitch and close investors</small>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /messages -->
+
+    <!-- Input area -->
+    <div class="input-section">
+      <!-- Hidden real file input -->
+      <input type="file" id="file-input" accept=".txt,.pdf" onchange="onFileChosen(event)">
+
+      <!-- File pill (shown when file selected) -->
+      <div id="pill-row"></div>
+
+      <div class="input-shell">
+        <textarea
+          id="user-input"
+          rows="1"
+          placeholder="Ask GrowthGPT anything…"
+        ></textarea>
+
+        <div class="input-actions">
+          <!-- Attach file button -->
+          <button class="attach-btn" id="attach-btn"
+            title="Upload .txt or .pdf"
+            onclick="document.getElementById('file-input').click()">📎</button>
+
+          <!-- Send button -->
+          <button id="send-btn" onclick="handleSend()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="input-footer">
+        <span class="input-hint">↵ Send · ⇧↵ New line · 📎 .txt / .pdf</span>
+        <span class="char-cnt" id="char-cnt">0 / 2000</span>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /shell -->
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
+
+
+
+
+

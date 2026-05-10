@@ -1,0 +1,5 @@
+growthgpt.db
+chats.json
+__pycache__/
+*.pyc
+.env

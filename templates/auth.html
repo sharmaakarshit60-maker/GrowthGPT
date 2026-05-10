@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>GrowthGPT — {% if mode=='login' %}Sign In{% else %}Sign Up{% endif %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #0a0a12;
+      --surface: rgba(255,255,255,0.06);
+      --border:  rgba(255,255,255,0.1);
+      --grad:    linear-gradient(135deg,#7c3aed,#db2777);
+      --text:    #f0f0ff;
+      --muted:   rgba(200,200,230,0.55);
+      --error:   rgba(255,80,100,0.9);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+    /* Background glow blobs */
+    body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none}
+    body::before{width:450px;height:450px;top:-120px;left:-120px;background:radial-gradient(circle,rgba(124,58,237,.18),transparent 70%)}
+    body::after{width:350px;height:350px;bottom:-80px;right:-80px;background:radial-gradient(circle,rgba(219,39,119,.13),transparent 70%)}
+
+    .card{
+      position:relative;z-index:1;
+      width:100%;max-width:400px;margin:16px;
+      background:rgba(14,14,24,.9);
+      border:1px solid var(--border);border-radius:20px;
+      padding:36px 32px;
+      backdrop-filter:blur(20px);
+      box-shadow:0 24px 60px rgba(0,0,0,.5);
+      animation:cardIn .45s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Gradient top line */
+    .card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:var(--grad);border-radius:4px;opacity:.7}
+
+    .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+    .logo-icon{width:38px;height:38px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 18px rgba(124,58,237,.4)}
+    .logo-name{
+      font-family:'Syne',sans-serif;
+      font-size:1.1rem;
+      font-weight:600;           /* was 800 — lighter = less stretched */
+      letter-spacing:-0.3px;    /* pulls glyphs slightly closer */
+      background:linear-gradient(90deg,#a855f7,#ec4899);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    h1{
+      font-family:'Syne',sans-serif;
+      font-size:1.65rem;         /* ~28px — slightly larger but not huge */
+      font-weight:600;           /* was 800 — tighter, more readable */
+      letter-spacing:-0.5px;    /* tightens without looking squished */
+      line-height:1.2;
+      margin-bottom:6px;
+    }
+    .sub{font-size:.85rem;color:var(--muted);margin-bottom:26px;line-height:1.5}
+
+    .err{background:rgba(255,80,100,.1);border:1px solid rgba(255,80,100,.25);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:.82rem;color:var(--error)}
+
+    .field{margin-bottom:14px}
+    label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px;letter-spacing:.02em}
+    input[type=text],input[type=password]{
+      width:100%;padding:11px 14px;
+      background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    input:focus{border-color:rgba(124,58,237,.5);box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+    input::placeholder{color:rgba(200,200,230,.25)}
+
+    .btn{
+      width:100%;padding:12px;margin-top:6px;
+      background:var(--grad);border:none;border-radius:11px;
+      color:#fff;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;
+      cursor:pointer;transition:all .2s ease;
+      box-shadow:0 4px 16px rgba(124,58,237,.3);
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.45)}
+
+    .divider{display:flex;align-items:center;gap:10px;margin:18px 0;font-size:.72rem;color:var(--muted)}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+    .switch{text-align:center;font-size:.82rem;color:var(--muted)}
+    .switch a{color:rgba(180,160,255,.9);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(124,58,237,.3)}
+    .switch a:hover{color:#fff}
+
+    .hint{font-size:.68rem;color:rgba(200,200,230,.3);margin-top:4px}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-row">
+    <div class="logo-icon">🌱</div>
+    <span class="logo-name">GrowthGPT</span>
+  </div>
+
+  {% if mode=='login' %}
+    <h1>Welcome 👋</h1>
+    <p class="sub">Sign in to continue your growth journey.</p>
+  {% else %}
+    <h1>Create account 🚀</h1>
+    <p class="sub">Join GrowthGPT — your AI-powered growth partner.</p>
+  {% endif %}
+
+  {% if error %}<div class="err">⚠️ {{ error }}</div>{% endif %}
+
+  <form method="POST">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" name="username" placeholder="e.g. akrshit" autocomplete="username" required/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••"
+             autocomplete="{% if mode=='login' %}current-password{% else %}new-password{% endif %}" required/>
+      {% if mode=='signup' %}<div class="hint">At least 6 characters</div>{% endif %}
+    </div>
+    <button class="btn" type="submit">
+      {% if mode=='login' %}Sign In →{% else %}Create Account →{% endif %}
+    </button>
+  </form>
+
+  <div class="divider">or</div>
+  {% if mode=='login' %}
+    <p class="switch">No account? <a href="/signup">Sign up free</a></p>
+  {% else %}
+    <p class="switch">Already have an account? <a href="/login">Sign in</a></p>
+  {% endif %}
+</div>
+</body>
+</html>
+
